@@ -1,0 +1,146 @@
+For ubuntu
+
+This method is somewhat based on http://archive.fabacademy.org/2018/labs/fablabulb/students/nicolas-decoster/?page=assignment&assignment=13 
+
+Find MCP2221 I2C bus driver v0.1 (that was a version included in another project i found)
+
+Follow the documentation how to compile the driver and install it.
+
+sudo i2cdetect -l
+
+mine popped up at adress i2c-7
+
+sudo i2cdetect -y 7 
+
+to check what adress is the display at
+
+
+I,ve disabled the backlight in the config I need to figure out why it doesn't light up when I use Backlight = Yes
+example
+
+LCDd.conf
+
+## This file was written by cme command.
+## You can run 'cme edit lcdproc' to modify this file.
+## You may also modify the content of this file with your favorite editor.
+
+# # This file was written by cme command.
+# # You can run 'cme edit lcdproc' to modify this file.
+# # You may also modify the content of this file with your favorite editor.
+
+
+[server]
+Driver = hd44780
+DriverPath = /usr/lib/x86_64-linux-gnu/lcdproc/
+#DriverPath = /usr/local/lib/lcdproc/
+GoodBye = "Thanks for using"
+GoodBye = "   LCDproc!"
+Hello = "  Welcome to"
+Hello = "   LCDproc!"
+# test end
+NextScreenKey = Right
+PrevScreenKey = Left
+ReportToSyslog = yes
+# test
+ServerScreen = blank
+ToggleRotateKey = Enter
+User = blabla
+WaitTime = 5
+
+# Hitachi HD44780 driver ##
+[hd44780]
+# Set brightness of the backlight (lcd2usb only) [default: 0; legal: 0 - 1000]
+# Brightness=1000
+# OffBrightness=0
+# If you have a switchable backlight.
+Backlight = no
+# For multiple combined displays: how many lines does each display have.
+# Vspan=2,2 means both displays have 2 lines.
+# vspan=2,2
+# If you have an HD66712, a KS0073 or another 'almost HD44780-compatible',
+# set this flag to get into extended mode (4-line linear).
+# ExtendedMode=yes
+# In extended mode, on some controllers like the ST7036 (in 3 line mode)
+# the next line in DDRAM won't start 0x20 higher. [default: 0x20]
+# LineAddress=0x10
+# Character map to to map ISO-8859-1 to the LCD's character set
+# [default: hd44780_default; legal: hd44780_default, hd44780_euro, ea_ks0073,
+# sed1278f_0b, hd44780_koi8_r, hd44780_cp1251, hd44780_8859_5, upd16314 ]
+# (hd44780_koi8_r, hd44780_cp1251, hd44780_8859_5 and upd16314 are possible if
+# compiled with additional charmaps)
+CharMap = hd44780_default
+# Select what type of connection. See documentation for types.
+# ConnectionType=ethlcd
+# ConnectionType=espwifilcd
+# ConnectionType=ftdi
+# ConnectionType=lcd2usb
+ConnectionType = i2c
+# Set the initial contrast (bwctusb and lcd2usb) [default: 500; legal: 0 - 1000]
+Contrast = 0
+# Some displays (e.g. vdr-wakeup) need a message from the driver to that it
+# is still alive. When set to a value bigger then null the character in the
+# upper left corner is updated every <KeepAliveDisplay> seconds. Default: 0.
+# KeepAliveDisplay=0
+# If you experience occasional garbage on your display you can use this
+# option as workaround. If set to a value bigger than null it forces a
+# full screen refresh <RefreshDiplay> seconds. Default: 0.
+# RefreshDisplay=5
+# You can reduce the inserted delays by setting this to false.
+# On fast PCs it is possible your LCD does not respond correctly.
+# Default: true.
+DelayBus = false
+# If your display is slow and cannot keep up with the flow of data from
+# LCDd, garbage can appear on the LCDd. Set this delay factor to 2 or 4
+# to increase the delays. Default: 1.
+DelayMult = 2
+# Device of the serial interface [default: /dev/lcd]
+# Device=192.168.121.158
+# Device=/dev/ttyACM0
+# Device=/dev/ttyS0
+Device = /dev/i2c-7
+# If you have a keypad you can assign keystrings to the keys.
+# See documentation for used terms and how to wire it.
+# For example to give directly connected key 4 the string "Enter", use:
+#   KeyDirect_4=Enter
+# For matrix keys use the X and Y coordinates of the key:
+#   KeyMatrix_1_3=Enter
+KeyMatrix_4_1 = Enter
+KeyMatrix_4_2 = Up
+KeyMatrix_4_3 = Down
+KeyMatrix_4_4 = Escape
+# Speed=115200
+# If you have a keypad connected.
+# You may also need to configure the keypad layout further on in this file.
+Keypad = no
+# If you have the additional output port ("bargraph") and you want to
+# be able to control it with the lcdproc OUTPUT command
+OutputPort = no
+# Port where the LPT is. Usual value are: 0x278, 0x378 and 0x3BC
+# Port=0x21
+Port = 0x27
+# Specifies if the last line is pixel addressable (yes) or it controls an
+# underline effect (no). [default: yes; legal: yes, no]
+# Lastline=yes
+# Specifies the size of the LCD.
+# In case of multiple combined displays, this should be the total size.
+Size = 16x2
+# Device=/dev/ttyS3
+# Bitrate of the serial port (0 for interface default)
+Speed = 9600
+
+#i2c pin configuration
+i2c_line_RS=0x01
+i2c_line_RW=0x02
+i2c_line_EN=0x04
+i2c_line_BL=0x08
+i2c_line_D4=0x10
+i2c_line_D5=0x20
+i2c_line_D6=0x40
+i2c_line_D7=0x80
+
+
+[menu]
+DownKey = Down
+EnterKey = Enter
+MenuKey = Escape
+UpKey = Up
